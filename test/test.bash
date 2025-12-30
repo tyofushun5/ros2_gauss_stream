@@ -3,7 +3,7 @@
 # Copyright (c) 2025 shun
 
 ng () {
-	echo "${1}行目が違うよ"
+	echo "line ${1} mismatch"
 	res=1
 }
 
