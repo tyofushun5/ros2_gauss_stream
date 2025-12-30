@@ -29,21 +29,30 @@ $ colcon build --packages-select mypkg
 $ source install/setup.bash
 ```
 
-### 実行
+### gauss_talker
 ```bash
 $ ros2 run mypkg gauss_talker
 ```
+- 正規分布 N(0, 1) から 0.5 秒周期で `/gauss` に publish します。
 
-別ターミナル:
+### gauss_listener
 ```bash
 $ source ~/ros2_ws/install/setup.bash
 $ ros2 run mypkg gauss_listener
 ```
+- `/gauss` を受信し、`n / mean / std` をログ出力します。
 
 ### launch
 ```bash
 $ ros2 launch mypkg gauss.launch.py
 ```
+- 2 つのノードを同時に起動します。
+
+### 確認
+```bash
+$ ros2 topic echo /gauss
+```
+- `gauss_talker` 実行中に別ターミナルで確認します。
 
 ## ノードとトピック
 ### gauss_talker
@@ -75,5 +84,5 @@ $ ./test/test.bash
 - ROS 2 Humble
 
 ## ライセンスおよびコピーライト
-MIT License. 詳細は `LICENSE` を参照してください。
+本リポジトリは MIT ライセンスです。詳細は `LICENSE` を参照してください。  
 Copyright (c) 2025 shun
