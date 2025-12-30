@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 <!-- Copyright (c) 2025 shun -->
 
-# mypkg (ros2-gauss-stream)
+# mypkg
 
 [![test](https://github.com/tyofushun5/ros2-gauss-stream/actions/workflows/test.yml/badge.svg)](https://github.com/tyofushun5/ros2-gauss-stream/actions/workflows/test.yml)
 
@@ -16,14 +16,14 @@
 - `test/test.bash`: シェルテスト
 
 ## 実行環境
-- Ubuntu 24.04
-- ROS 2 Jazzy
+- Ubuntu 22.04
+- ROS 2 Humble
 - Python 3
 
 ## 使い方
 ### ビルド
 ```bash
-$ source /opt/ros/jazzy/setup.bash
+$ source /opt/ros/humble/setup.bash
 $ cd ~/ros2_ws
 $ colcon build --packages-select mypkg
 $ source install/setup.bash
@@ -64,8 +64,15 @@ $ cd ~/ros2_ws/src/mypkg
 $ ./test/test.bash
 ```
 
-このスクリプトはパッケージをビルドし、ノードを短時間実行して
-メッセージが流れていることを確認します。
+このスクリプトはパッケージをビルドし、以下を確認します。
+- 不正なノード名の実行が失敗すること
+- `gauss_talker` の publish が行われること
+- `gauss_listener` の統計ログが出力されること
+- launch で両ノードが動作し、トピックが流れること
+
+### テスト環境
+- Ubuntu 22.04
+- ROS 2 Humble
 
 ## ライセンスおよびコピーライト
 MIT License. 詳細は `LICENSE` を参照してください。
