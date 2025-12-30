@@ -25,7 +25,7 @@
 ```bash
 $ source /opt/ros/humble/setup.bash
 $ cd ~/ros2_ws
-$ colcon build --packages-select mypkg
+$ colcon build 
 $ source install/setup.bash
 ```
 
