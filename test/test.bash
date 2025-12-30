@@ -65,7 +65,6 @@ fi
 
 # shellcheck source=/dev/null
 source install/setup.bash
-
 talker_log=$(mktemp)
 listener_log=$(mktemp)
 

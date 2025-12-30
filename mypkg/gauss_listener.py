@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2025 shun
-"""Gaussian listener node."""
 
 import math
 
@@ -10,10 +9,7 @@ from std_msgs.msg import Float32
 
 
 class GaussListener(Node):
-    """Subscribe to Gaussian samples and log running statistics."""
-
     def __init__(self) -> None:
-        """Initialize the listener node."""
         super().__init__('gauss_listener')
         self._n = 0
         self._mean = 0.0
@@ -26,7 +22,6 @@ class GaussListener(Node):
         )
 
     def _on_message(self, msg: Float32) -> None:
-        """Update statistics from a new sample and log it."""
         x = msg.data
         self._n += 1
         delta = x - self._mean
@@ -41,7 +36,6 @@ class GaussListener(Node):
 
 
 def main(args=None) -> None:
-    """Entry point for the gauss_listener node."""
     rclpy.init(args=args)
     node = GaussListener()
     try:
