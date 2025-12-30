@@ -4,55 +4,50 @@
 # mypkg (ros2-gauss-stream)
 
 ## 概要
-正規分布のサンプルを送信し、受信側で逐次統計を表示する
-ROS 2 (rclpy) パッケージです。GitHub リポジトリ名の案:
-`ros2-gauss-stream`
+正規分布のサンプルを publish し、受信側で平均・標準偏差を
+計算してログ表示する ROS 2 (rclpy) パッケージです。
 
-## 内容
-- `mypkg/gauss_talker.py`: 正規分布サンプルを送信するノード
-- `mypkg/gauss_listener.py`: 逐次統計を表示するノード
-- `test/test.bash`: シェルによる簡易テスト
-
-## 実行環境
-- ROS 2 Humble / Jazzy
+## 動作確認環境
+- ROS 2 Humble (Ubuntu 22.04)
 - Python 3
 
-## インストール
-```bash
-source /opt/ros/<distro>/setup.bash
-cd ~/ros2_ws
-colcon build
-source install/setup.bash
-```
-
-## 使い方
+## ノードとトピック
 ### gauss_talker
 - ノード名: `gauss_talker`
-- `std_msgs/msg/Float32` を `gauss` に publish（キュー 10）
-- `random.Random(0).gauss(mu=0.0, sigma=1.0)` を使用
+- publish: `/gauss` (`std_msgs/msg/Float32`, キュー 10)
+- 乱数: `random.Random(0).gauss(mu=0.0, sigma=1.0)`
 - タイマ周期: 0.5 秒
-
-```bash
-ros2 run mypkg gauss_talker
-```
 
 ### gauss_listener
 - ノード名: `gauss_listener`
-- `gauss` を subscribe（キュー 10）
+- subscribe: `/gauss` (`std_msgs/msg/Float32`, キュー 10)
 - Welford 法（n, mean, M2）で逐次統計を更新し、以下をログ出力:
   `n=... x=... mean=... std=...`
 
+## 使い方
+### ビルド
 ```bash
-ros2 run mypkg gauss_listener
+$ source /opt/ros/humble/setup.bash
+$ cd ~/ros2_ws
+$ colcon build --packages-select mypkg
+$ source install/setup.bash
 ```
 
-注: 新しいターミナルでは `source ~/ros2_ws/install/setup.bash` を先に実行してください。
+### 実行
+```bash
+$ ros2 run mypkg gauss_talker
+```
+
+別ターミナル:
+```bash
+$ source ~/ros2_ws/install/setup.bash
+$ ros2 run mypkg gauss_listener
+```
 
 ## テスト
 ```bash
-cd ~/ros2_ws/src/mypkg
-chmod +x test/test.bash
-./test/test.bash
+$ cd ~/ros2_ws/src/mypkg
+$ ./test/test.bash
 ```
 
 このスクリプトはパッケージをビルドし、ノードを短時間実行して
