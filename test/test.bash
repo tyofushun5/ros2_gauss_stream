@@ -41,7 +41,12 @@ if ! command -v colcon >/dev/null 2>&1; then
 	exit 1
 fi
 
-cd ~/ros2_ws || exit 1
+ros2_ws_dir="${ROS2_WS:-$HOME/ros2_ws}"
+if [ ! -d "${ros2_ws_dir}" ]; then
+	echo "Workspace not found: ${ros2_ws_dir}"
+	exit 1
+fi
+cd "${ros2_ws_dir}" || exit 1
 
 if ! colcon build --packages-select mypkg; then
 	exit 1
