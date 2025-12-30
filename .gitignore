@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 shun
+build/
+install/
+log/
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.vscode/
+.idea/

@@ -1,35 +1,57 @@
-# SPDX-FileCopyrightText: 2025 shun
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2025 shun
+"""Gaussian listener node."""
+
+import math
+
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
-import math
 
-rclpy.init()
-node = Node("gauss_listener")
 
-n = 0
-mean = 0.0
-M2 = 0.0
+class GaussListener(Node):
+    """Subscribe to Gaussian samples and log running statistics."""
 
-def cb(msg):
-    global n, mean, M2
-    x = msg.data
+    def __init__(self) -> None:
+        """Initialize the listener node."""
+        super().__init__('gauss_listener')
+        self._n = 0
+        self._mean = 0.0
+        self._m2 = 0.0
+        self._subscription = self.create_subscription(
+            Float32,
+            'gauss',
+            self._on_message,
+            10,
+        )
 
-    # Welford法（平均と分散を逐次更新）
-    n += 1
-    delta = x - mean
-    mean += delta / n
-    delta2 = x - mean
-    M2 += delta * delta2
+    def _on_message(self, msg: Float32) -> None:
+        """Update statistics from a new sample and log it."""
+        x = msg.data
+        self._n += 1
+        delta = x - self._mean
+        self._mean += delta / self._n
+        delta2 = x - self._mean
+        self._m2 += delta * delta2
+        var = self._m2 / self._n
+        std = math.sqrt(var)
+        self.get_logger().info(
+            f"n={self._n} x={x:.3f} mean={self._mean:.3f} std={std:.3f}"
+        )
 
-    var = M2 / n
-    std = math.sqrt(var)
 
-    node.get_logger().info(f"n={n} x={x:.3f} mean={mean:.3f} std={std:.3f}")
+def main(args=None) -> None:
+    """Entry point for the gauss_listener node."""
+    rclpy.init(args=args)
+    node = GaussListener()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
-sub = node.create_subscription(Float32, "gauss", cb, 10)
 
-def main():
-    rclpy.spin(node)
-
+if __name__ == '__main__':
+    main()
