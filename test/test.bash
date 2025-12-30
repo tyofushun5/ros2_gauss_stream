@@ -7,6 +7,17 @@ ng () {
 	res=1
 }
 
+show_logs () {
+	if [ -n "${talker_log}" ] && [ -f "${talker_log}" ]; then
+		echo "--- gauss_talker log ---"
+		tail -n 50 "${talker_log}"
+	fi
+	if [ -n "${listener_log}" ] && [ -f "${listener_log}" ]; then
+		echo "--- gauss_listener log ---"
+		tail -n 50 "${listener_log}"
+	fi
+}
+
 res=0
 
 talker_pid=""
@@ -62,14 +73,30 @@ ros2 run mypkg gauss_talker > "${talker_log}" 2>&1 &
 talker_pid=$!
 sleep 0.5
 
-out=$(timeout 5s ros2 topic echo -n 1 /gauss 2>/dev/null)
-[ -n "${out}" ] || ng "$LINENO"
+if ! kill -0 "${talker_pid}" 2>/dev/null; then
+	echo "gauss_talker exited early."
+	show_logs
+	ng "$LINENO"
+fi
 
-stdbuf -oL ros2 run mypkg gauss_listener > "${listener_log}" 2>&1 &
+stdbuf -oL -eL ros2 run mypkg gauss_listener > "${listener_log}" 2>&1 &
 listener_pid=$!
-sleep 2
+received=0
+count=0
+while [ "${count}" -lt 50 ]; do
+	if grep -q "n=" "${listener_log}"; then
+		received=1
+		break
+	fi
+	sleep 0.1
+	count=$((count + 1))
+done
 
-grep -q "n=" "${listener_log}" || ng "$LINENO"
+if [ "${received}" -ne 1 ]; then
+	echo "gauss_listener did not receive messages."
+	show_logs
+	ng "$LINENO"
+fi
 
 [ "${res}" = 0 ] && echo OK
 exit ${res}
