@@ -1,0 +1,70 @@
+#!/bin/bash
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 shun
+
+ng () {
+	echo "${1}行目が違うよ"
+	res=1
+}
+
+res=0
+
+talker_pid=""
+listener_pid=""
+talker_log=""
+listener_log=""
+
+cleanup () {
+	if [ -n "${talker_pid}" ]; then
+		kill "${talker_pid}" 2>/dev/null
+	fi
+	if [ -n "${listener_pid}" ]; then
+		kill "${listener_pid}" 2>/dev/null
+	fi
+	wait ${talker_pid} ${listener_pid} 2>/dev/null
+	if [ -n "${talker_log}" ]; then
+		rm -f "${talker_log}"
+	fi
+	if [ -n "${listener_log}" ]; then
+		rm -f "${listener_log}"
+	fi
+}
+trap cleanup EXIT
+
+if ! command -v ros2 >/dev/null 2>&1; then
+	echo "ros2 command not found. Source your ROS 2 setup.bash."
+	exit 1
+fi
+
+if ! command -v colcon >/dev/null 2>&1; then
+	echo "colcon command not found. Install colcon and source ROS 2 env."
+	exit 1
+fi
+
+cd ~/ros2_ws || exit 1
+
+if ! colcon build --packages-select mypkg; then
+	exit 1
+fi
+
+# shellcheck source=/dev/null
+source install/setup.bash
+
+talker_log=$(mktemp)
+listener_log=$(mktemp)
+
+ros2 run mypkg gauss_talker > "${talker_log}" 2>&1 &
+talker_pid=$!
+sleep 0.5
+
+out=$(timeout 5s ros2 topic echo -n 1 /gauss 2>/dev/null)
+[ -n "${out}" ] || ng "$LINENO"
+
+stdbuf -oL ros2 run mypkg gauss_listener > "${listener_log}" 2>&1 &
+listener_pid=$!
+sleep 2
+
+grep -q "n=" "${listener_log}" || ng "$LINENO"
+
+[ "${res}" = 0 ] && echo OK
+exit ${res}
