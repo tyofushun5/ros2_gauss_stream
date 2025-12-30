@@ -44,6 +44,11 @@ $ source ~/ros2_ws/install/setup.bash
 $ ros2 run mypkg gauss_listener
 ```
 
+### launch
+```bash
+$ ros2 launch mypkg gauss.launch.py
+```
+
 ## テスト
 ```bash
 $ cd ~/ros2_ws/src/mypkg
