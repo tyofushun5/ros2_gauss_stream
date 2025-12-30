@@ -1,12 +1,20 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 shun
 name: test
-on: push
+
+on:
+  push:
+  pull_request:
+
 jobs:
   test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+    runs-on: ubuntu-22.04
+    container: ryuichiueda/ubuntu22.04-ros2:latest
     steps:
-    - uses: actions/checkout@v3
-    - name: All test
-      run: bash -xv ./test.bash
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          mkdir -p /root/ros2_ws/src/mypkg
+          cp -a . /root/ros2_ws/src/mypkg/
+          source /opt/ros/humble/setup.bash
+          bash -xv /root/ros2_ws/src/mypkg/test/test.bash

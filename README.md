@@ -5,8 +5,8 @@
 
 ## 概要
 正規分布のサンプルを送信し、受信側で逐次統計を表示する
-ROS 2 (rclpy) パッケージです。GitHub リポジトリ名の案は
-`ros2-gauss-stream` です。
+ROS 2 (rclpy) パッケージです。GitHub リポジトリ名の案:
+`ros2-gauss-stream`
 
 ## 内容
 - `mypkg/gauss_talker.py`: 正規分布サンプルを送信するノード
