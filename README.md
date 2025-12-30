@@ -3,20 +3,21 @@
 
 # mypkg (ros2-gauss-stream)
 
-## Overview
-A ROS 2 (rclpy) package that publishes Gaussian samples and logs running
-statistics. Suggested GitHub repository name: `ros2-gauss-stream`.
+## 概要
+正規分布のサンプルを送信し、受信側で逐次統計を表示する
+ROS 2 (rclpy) パッケージです。GitHub リポジトリ名の案は
+`ros2-gauss-stream` です。
 
-## Contents
-- `mypkg/gauss_talker.py`: Gaussian publisher node
-- `mypkg/gauss_listener.py`: Running statistics subscriber node
-- `test/test.bash`: Shell-based test script
+## 内容
+- `mypkg/gauss_talker.py`: 正規分布サンプルを送信するノード
+- `mypkg/gauss_listener.py`: 逐次統計を表示するノード
+- `test/test.bash`: シェルによる簡易テスト
 
-## Environment
+## 実行環境
 - ROS 2 Humble / Jazzy
 - Python 3
 
-## Installation
+## インストール
 ```bash
 source /opt/ros/<distro>/setup.bash
 cd ~/ros2_ws
@@ -24,39 +25,39 @@ colcon build
 source install/setup.bash
 ```
 
-## Usage
+## 使い方
 ### gauss_talker
-- Node name: `gauss_talker`
-- Publishes `std_msgs/msg/Float32` on topic `gauss` (queue size 10)
-- Uses `random.Random(0).gauss(mu=0.0, sigma=1.0)`
-- Timer period: 0.5 s
+- ノード名: `gauss_talker`
+- `std_msgs/msg/Float32` を `gauss` に publish（キュー 10）
+- `random.Random(0).gauss(mu=0.0, sigma=1.0)` を使用
+- タイマ周期: 0.5 秒
 
 ```bash
 ros2 run mypkg gauss_talker
 ```
 
 ### gauss_listener
-- Node name: `gauss_listener`
-- Subscribes to `gauss` (queue size 10)
-- Welford algorithm (n, mean, M2) and logs:
+- ノード名: `gauss_listener`
+- `gauss` を subscribe（キュー 10）
+- Welford 法（n, mean, M2）で逐次統計を更新し、以下をログ出力:
   `n=... x=... mean=... std=...`
 
 ```bash
 ros2 run mypkg gauss_listener
 ```
 
-Note: In a new terminal, run `source ~/ros2_ws/install/setup.bash` first.
+注: 新しいターミナルでは `source ~/ros2_ws/install/setup.bash` を先に実行してください。
 
-## Test
+## テスト
 ```bash
 cd ~/ros2_ws/src/mypkg
 chmod +x test/test.bash
 ./test/test.bash
 ```
 
-The script builds the package, runs the nodes briefly, and checks that
-samples are published and the listener logs statistics.
+このスクリプトはパッケージをビルドし、ノードを短時間実行して
+メッセージが流れていることを確認します。
 
-## License and Copyright
-MIT License. See `LICENSE`.
+## ライセンスと著作権
+MIT License. 詳細は `LICENSE` を参照してください。
 Copyright (c) 2025 shun
