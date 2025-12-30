@@ -65,6 +65,11 @@ fi
 
 # shellcheck source=/dev/null
 source install/setup.bash
+
+if ros2 run mypkg no_such_node >/dev/null 2>&1; then
+	echo "invalid command should fail."
+	ng "$LINENO"
+fi
 talker_log=$(mktemp)
 listener_log=$(mktemp)
 

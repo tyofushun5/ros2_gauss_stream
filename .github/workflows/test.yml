@@ -17,7 +17,7 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          mkdir -p /root/ros2_ws/src/mypkg
-          cp -a . /root/ros2_ws/src/mypkg/
+          mkdir -p "${ROS2_WS}/src/mypkg"
+          cp -a . "${ROS2_WS}/src/mypkg/"
           source /opt/ros/humble/setup.bash
-          bash -xv /root/ros2_ws/src/mypkg/test/test.bash
+          bash -xv "${ROS2_WS}/src/mypkg/test/test.bash"

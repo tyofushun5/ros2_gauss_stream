@@ -3,31 +3,27 @@
 
 # mypkg (ros2-gauss-stream)
 
+[![test](https://github.com/tyofushun5/ros2-gauss-stream/actions/workflows/test.yml/badge.svg)](https://github.com/tyofushun5/ros2-gauss-stream/actions/workflows/test.yml)
+
 ## 概要
-正規分布のサンプルを publish し、受信側で平均・標準偏差を
+正規分布のサンプルを publish（送信）し、受信側で平均と標準偏差を
 計算してログ表示する ROS 2 (rclpy) パッケージです。
 
-## 動作確認環境
-- ROS 2 Humble (Ubuntu 22.04)
+## 内容
+- `mypkg/gauss_talker.py`: 正規分布サンプルを送信するノード
+- `mypkg/gauss_listener.py`: 逐次統計を表示するノード
+- `launch/gauss.launch.py`: 2 ノード起動用の launch
+- `test/test.bash`: シェルテスト
+
+## 実行環境
+- Ubuntu 24.04
+- ROS 2 Jazzy
 - Python 3
-
-## ノードとトピック
-### gauss_talker
-- ノード名: `gauss_talker`
-- publish: `/gauss` (`std_msgs/msg/Float32`, キュー 10)
-- 乱数: `random.Random(0).gauss(mu=0.0, sigma=1.0)`
-- タイマ周期: 0.5 秒
-
-### gauss_listener
-- ノード名: `gauss_listener`
-- subscribe: `/gauss` (`std_msgs/msg/Float32`, キュー 10)
-- Welford 法（n, mean, M2）で逐次統計を更新し、以下をログ出力:
-  `n=... x=... mean=... std=...`
 
 ## 使い方
 ### ビルド
 ```bash
-$ source /opt/ros/humble/setup.bash
+$ source /opt/ros/jazzy/setup.bash
 $ cd ~/ros2_ws
 $ colcon build --packages-select mypkg
 $ source install/setup.bash
@@ -49,6 +45,19 @@ $ ros2 run mypkg gauss_listener
 $ ros2 launch mypkg gauss.launch.py
 ```
 
+## ノードとトピック
+### gauss_talker
+- ノード名: `gauss_talker`
+- publish: `/gauss` (`std_msgs/msg/Float32`, キュー 10)
+- 乱数: `random.Random(0).gauss(mu=0.0, sigma=1.0)`
+- タイマ周期: 0.5 秒
+
+### gauss_listener
+- ノード名: `gauss_listener`
+- subscribe: `/gauss` (`std_msgs/msg/Float32`, キュー 10)
+- Welford 法（n, mean, M2）で逐次統計を更新し、以下をログ出力:
+  `n=... x=... mean=... std=...`
+
 ## テスト
 ```bash
 $ cd ~/ros2_ws/src/mypkg
@@ -58,6 +67,6 @@ $ ./test/test.bash
 このスクリプトはパッケージをビルドし、ノードを短時間実行して
 メッセージが流れていることを確認します。
 
-## ライセンスと著作権
+## ライセンスおよびコピーライト
 MIT License. 詳細は `LICENSE` を参照してください。
 Copyright (c) 2025 shun
