@@ -13,6 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run tests
+        shell: bash
         run: |
           mkdir -p /root/ros2_ws/src/mypkg
           cp -a . /root/ros2_ws/src/mypkg/
