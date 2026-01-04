@@ -5,7 +5,8 @@
 
 [![test](https://github.com/tyofushun5/ros2-gauss-stream/actions/workflows/test.yml/badge.svg)](https://github.com/tyofushun5/ros2-gauss-stream/actions/workflows/test.yml)
 
-正規分布の値をストリームとして publish し、受信側で逐次統計（n/mean/std）を計算してログに出力する ROS 2 (rclpy) パッケージです。
+gauss_talker が正規分布 N(0, 1) のサンプルを 0.5 秒周期で publish し、gauss_listener が
+`/gauss` を subscribe して逐次統計（n/mean/std）を更新・ログ出力する ROS 2 (rclpy) パッケージです。
 
 ## ノードとトピック
 
@@ -36,19 +37,17 @@ talker/listener を同時に起動します。
 ros2 launch ros2_gauss_stream gauss.launch.py
 ```
 
-## 使用例
-
-ROS 2 環境が有効な端末で実行します。
+## 実行例
 
 ```bash
 ros2 run ros2_gauss_stream gauss_talker
 ros2 run ros2_gauss_stream gauss_listener
 ```
 
-## 確認
+## 確認（出力例）
 
-```bash
-ros2 topic echo /gauss --once
+```console
+$ ros2 topic echo /gauss --once
 data: 0.02832544
 ---
 ```
@@ -60,7 +59,7 @@ data: 0.02832544
 - Ubuntu 22.04
 - ROS 2 Humble
 
-## ライセンスおよびコピーライト
+## ライセンス
 
 このプロジェクトは MIT ライセンスの下で公開されています。詳細は `LICENSE` を参照してください。
 
