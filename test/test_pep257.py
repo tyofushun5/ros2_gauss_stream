@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2025 shun
+# SPDX-FileCopyrightText: 2025 shun
 
 from ament_pep257.main import main
 import pytest
