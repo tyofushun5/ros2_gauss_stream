@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2025 shun
+# SPDX-FileCopyrightText: 2025 shun
 name: test
 
 on:
@@ -17,7 +17,7 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          mkdir -p "${ROS2_WS}/src/mypkg"
-          cp -a . "${ROS2_WS}/src/mypkg/"
+          mkdir -p "${ROS2_WS}/src/ros2_gauss_stream"
+          cp -a . "${ROS2_WS}/src/ros2_gauss_stream/"
           source /opt/ros/humble/setup.bash
-          bash -xv "${ROS2_WS}/src/mypkg/test/test.bash"
+          bash -xv "${ROS2_WS}/src/ros2_gauss_stream/test/test.bash"
